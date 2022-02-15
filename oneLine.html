@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        html,
+        body {
+            scroll-behavior: smooth;
+            width: 100%;
+            height: 100%;
+        }
+
+        .wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+        }
+
+        @media (orientation: landscape) {
+            .item {
+                width: 100%;
+                height: 100%;
+                /* border: 1px solid lime; */
+                box-sizing: border-box;
+                position: relative;
+            }
+        }
+
+        @media (orientation: portrait) {
+            .wrapper {
+                height: 140%;
+                flex-wrap: wrap;
+            }
+
+            .item {
+                width: 100%;
+                height: 50%;
+                /* border: 1px solid lime; */
+                box-sizing: border-box;
+                position: relative;
+            }
+
+            .content {
+                -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            }
+
+            .content::after {
+                content: "";
+                display: block;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                /* background: red; */
+            }
+
+            .item .btn {
+                position: absolute;
+                left: 53%;
+                top: 85%;
+                transform: translate(0, 0);
+                padding: 6px 12px;
+                border-radius: 10px;
+                border: 2px solid lime;
+                box-sizing: border-box;
+                outline: none;
+                cursor: pointer;
+                font-size: 16px;
+                color: white;
+                background: lime;
+                transition: .4s;
+            }
+
+            .wrapper .item .rank {
+                position: absolute;
+                left: 22%;
+                top: 80%;
+                transform: translate(0, 0);
+                /* border-radius: 10px; */
+                border: 2px solid lime;
+                box-sizing: border-box;
+                overflow: hidden;
+            }
+
+            .wrapper .item .rank div {
+                width: 80px;
+                height: 25px;
+                background-color: lime;
+                text-align: center;
+                line-height: 30px;
+                color: #fff;
+                cursor: pointer;
+                transition: .4s;
+            }
+        }
+
+        .wrapper1,
+        .wrapper2 {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -60%);
+            width: 300px;
+            height: 300px;
+            display: flex;
+            flex-wrap: wrap;
+            z-index: 9999;
+            box-shadow: 2px 2px 8px #23fded;
+        }
+
+        .spot {
+            width: 100px;
+            height: 100px;
+            position: relative;
+        }
+
+        .content {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: transparent;
+            border: 8px solid lime;
+            cursor: pointer;
+            transition: .5s;
+        }
+
+        .select {
+            box-shadow: 0 0 20px#0ff,
+                0 0 20px#0ff,
+                0 0 20px#0ff,
+                0 0 20px#0ff,
+                0 0 20px#0ff;
+        }
+
+        .btn {
+            position: absolute;
+            left: 53%;
+            top: 80%;
+            transform: translate(0, 0);
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: 2px solid lime;
+            box-sizing: border-box;
+            outline: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: white;
+            background: lime;
+            transition: .4s;
+        }
+
+        .btn:hover {
+            background: white;
+            color: lime;
+        }
+
+        .item .rank {
+            position: absolute;
+            left: 28%;
+            top: 75%;
+            transform: translate(0, 0);
+            /* border-radius: 10px; */
+            border: 2px solid lime;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .item .rank div {
+            width: 100px;
+            height: 30px;
+            background-color: lime;
+            text-align: center;
+            line-height: 30px;
+            color: #fff;
+            cursor: pointer;
+            transition: .4s;
+        }
+
+        .item .rank div:hover {
+            /* background: rgb(124, 252, 0); */
+            background: lightgreen;
+            color: white;
+        }
+
+        .item .rank div.active {
+            background: white;
+            color: lime;
+        }
+
+        #canvas1,
+        #canvas2 {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -60%);
+            border: 1px solid lime;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="item">
+            <div class="wrapper1">
+                <!-- <div class="spot">
+                    <div class="content"></div>
+                </div> -->
+            </div>
+            <canvas id="canvas1" width="300px" height="300px"></canvas>
+            <button class="btn">开始求解</button>
+            <div class="rank">
+                <div class="active">3×3</div>
+                <div>4×4</div>
+                <div>5×5</div>
+            </div>
+        </div>
+        <div class="item">
+            <div class="wrapper2">
+                <!-- <div class="spot">
+                    <div class="content"></div>
+                </div> -->
+            </div>
+            <canvas id="canvas2" width="300px" height="300px"></canvas>
+        </div>
+    </div>
+
+    <script>
+        (() => { "use strict"; const e = document.getElementsByClassName("item"); function t(t) { const n = document.querySelector(".wrapper1"), o = document.querySelector(".wrapper2"), l = document.createElement("div"); l.className = "wrapper1"; const s = document.createElement("div"); s.className = "wrapper2", n.remove(), o.remove(), e[0].appendChild(l), e[1].appendChild(s), l.innerHTML = "", s.innerHTML = ""; const c = `<div class="spot" style="width: ${300 / t}px; height: ${300 / t}px;">\n    <div class="con-wrap"><div class="content"></div></div>\n    </div>`; for (let e = 0; e < t * t; e++)l.innerHTML += c, s.innerHTML += c } function n(e) { const t = [], n = document.querySelectorAll(".wrapper1 .content"), o = document.querySelectorAll(".wrapper2 .content"), l = n[0].offsetLeft, s = n[0].offsetTop; for (let o = 0; o < n.length; o++) { const n = {}, c = 300 / e; n.x = (l + c * o) % 300, n.y = s + c * Math.floor(o / e), t.push(n) } return { dotsMes: t, dots1: n, dots2: o } } function o(e, t, n, o, l) { e.beginPath(), e.moveTo(t, n), e.lineTo(o, l), e.stroke() } function l(e, t, n, o, l, s, c) { e.beginPath(), e.restore(), e.save(), e.lineWidth = 10 / s, e.translate(c.x, c.y), e.scale(s, s), e.moveTo(t, n), e.lineTo(o, l), e.stroke() } async function s(e, t, n, o, s) { return new Promise((c => { const r = t, i = n; o -= r, s -= i; let a = 0, u = null; u = setInterval((function () { l(e, 0, 0, o, s, a, { x: r, y: i }), a += 1 / 30, Math.abs(a - 1) < 1e-8 && (a = 1, l(e, 0, 0, o, s, a, { x: r, y: i }), clearInterval(u), c()) }), 1e3 / 30) })) } function c(e) { const t = document.getElementsByClassName("item")[e], n = document.getElementById(`canvas${e + 1}`), o = document.createElement("canvas"); o.id = `canvas${e + 1}`, o.width = 300, o.height = 300, t.removeChild(n), t.appendChild(o) } let r = [], i = [], a = []; function u(e, t) { for (let n = 0; n < e.length; n++)if (t == e[n]) return n; return -1 } function d(e, t) { const l = document.getElementById("canvas1").getContext("2d"); l.lineCap = "round", l.lineWidth = 10, l.strokeStyle = "lime", function (e, t, l) { const s = document.getElementsByClassName("wrapper1")[0]; s.addEventListener("dragstart", (e => { e.preventDefault() })); const d = n(t), f = d.dots1, p = d.dotsMes; s.addEventListener("mousedown", (function (e) { const t = e.target, n = u(f, t); -1 !== n && (r.push(n), t.className += " select", a.push(n)) })), s.addEventListener("mouseup", (function (t) { const n = t.target, s = u(f, n); if (-1 === s) r.length && (f[r[0]].className = "content"), r = [], i = [], a = []; else if (a.length ? (a.push(s), a[0] == a[1] ? i.push(s) : i = [], a = []) : i = [], r.length) if (f[r[0]].className = "content", r[0] === s) r = []; else { let t, n; r.push(s), e[r[0]][r[1]] = 1, e[r[1]][r[0]] = 1, t = p[r.pop()], n = p[r.pop()], o(l, t.x, t.y, n.x, n.y) } if (1 == i.length && (f[i[0]].className += " select"), 2 == i.length) if (i[0] == i[1]) i.pop(); else if (1 == e[i[0]][i[1]]) e[i[0]][i[1]] = 0, e[i[1]][i[0]] = 0, i.pop(), i.pop(), l = function (e, t) { c(0); const n = document.getElementById("canvas1").getContext("2d"); n.lineCap = "round", n.lineWidth = 10, n.strokeStyle = "lime"; for (let l = 0; l < e[0].length; l++)for (let s = 0; s <= l; s++)1 == e[l][s] && o(n, t[l].x, t[l].y, t[s].x, t[s].y); return n }(e, p); else { let t, n; e[i[0]][i[1]] = 1, e[i[1]][i[0]] = 1, t = p[i.pop()], n = p[i.pop()], o(l, t.x, t.y, n.x, n.y) } if (0 == i.length) for (let e = 0; e < f.length; e++)"content" !== f[e].className && (f[e].className = "content") })); let h = []; s.addEventListener("touchstart", (function (e) { const t = e.target, n = u(f, t); -1 !== n && (h.push(n), t.className += " select") })), s.addEventListener("touchmove", (function (e) { e.preventDefault() })), s.addEventListener("touchend", (function (t) { const n = t.changedTouches[0], s = document.elementFromPoint(n.clientX, n.clientY), c = u(f, s); if (h.length && (f[h[0]].className = "content"), -1 == c) h = []; else if (h[0] == c) h = []; else { let t, n; h.push(c), e[h[0]][h[1]] = 1, e[h[1]][h[0]] = 1, t = p[h.pop()], n = p[h.pop()], o(l, t.x, t.y, n.x, n.y) } })) }(e, t, l) } const f = document.getElementsByClassName("btn")[0], p = document.querySelectorAll(".rank div"); let h = 3, m = g(h * h); t(h), d(m, h); for (let e = 0; e < p.length; e++)p[e].addEventListener("click", (function () { c(0), c(1), v(e), h = e + 3, m = g(h * h), t(h), d(m, h) })); function g(e) { const t = []; for (let n = 0; n < e; n++) { t.push([]); for (let o = 0; o < e; o++)t[n][o] = 0 } return t } function v(e) { for (let t = 0; t < p.length; t++)p[t].className = t == e ? "active" : "" } f.addEventListener("click", (() => { const e = []; for (let t = 0; t < h * h; t++)e.push([...m[t]]); const o = function (e) { const t = function (e) { const t = { hasSolu: !1, beginNode: null }; let n = 0, o = 0; for (let t = 0; t < e.length; t++)e[t] % 2 != 0 && (n++, o = t); if (2 == n) t.hasSolu = !0, t.beginNode = o; else if (0 == n) { t.hasSolu = !0; for (let n = 0; n < e.length; n++)if (e[n]) { t.beginNode = n; break } } return t }(function (e) { const t = e.length, n = []; for (let o = 0; o < t; o++) { let l = 0; for (let n = 0; n < t; n++)e[o][n] && l++; n.push(l) } return n }(e)); return t.hasSolu && null !== t.beginNode ? function (e, t) { let n = [], o = !1, l = []; const s = e.length; return l.push(t), function t(c) { if (!o) if (function (e, t) { for (let n = 0; n < e.length; n++)if (1 == e[t][n]) return !0; return !1 }(e, c)) { for (let n = 0; n < s; n++)1 == e[c][n] && (l.push(n), e[c][n] = 2, e[n][c] = 2, t(n)); const n = l.pop(), o = l[l.length - 1]; e[n][o] = 1, e[o][n] = 1 } else { if (function (e) { const t = e.length; for (let n = 0; n < t; n++)for (let o = 0; o < t; o++)if (1 == e[n][o]) return !1; return !0 }(e)) return n = [...l], void (o = !0); const t = l.pop(), s = l[l.length - 1]; e[t][s] = 1, e[s][t] = 1 } }(t), n }(e, t.beginNode) : void alert("no solution！") }(m); m = e, t(h), d(m, h), c(1), o && (document.getElementsByTagName("html")[0].scrollTop = 222222, async function (e, t) { const o = n(t).dotsMes, l = document.getElementById("canvas2").getContext("2d"); l.lineCap = "round", l.lineWidth = 10, l.strokeStyle = "lime"; for (let t = 1; t < e.length; t++) { const n = e[t - 1], c = e[t]; await s(l, o[n].x, o[n].y, o[c].x, o[c].y) } }(o, h)) })) })();
+    </script>
+</body>
+
+</html>
